@@ -44,6 +44,9 @@ const rules = require('./validations')
 app.get("/upload", (req, res)=>{
     res.sendFile(path.join(__dirname, "index.html"));
 });
+app.post('./samplepost', (req, res)=>{
+  res.send("Sample post")
+})
 app.post('/profile', uploads.single('single'), (req, res)=>{
     console.log(req.file);
     res.send("File uploaded")
