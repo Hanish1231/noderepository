@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 const pool = mysql.createPool({
-    user : 'root',
-    password : 'Hanish123',
-    host : 'localhost',
-    database : 'nodedb',
+    user : 'sql6457569',
+    password : 'swpzgfW1y5',
+    host : 'sql6.freemysqlhosting.net',
+    database : 'sql6457569',
     // port : 3306,
     // max : 10,
 });
