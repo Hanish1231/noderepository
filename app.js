@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 app.use(express.json())
 const path = require('path');
+var getUser = require('./services')
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -78,43 +79,22 @@ app.get('/team/:bId', ...rules.getRules, (req,res)=>{
     })
   })
 
-app.get('/:id', ...rules.getRules, (req,res)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log("errors:", errors)
-      return res.status(400).json({ errors: errors.array() });
-    }
-  let query = `select * from users`
-  let data = [req.params.id];
-  connect.connectDB() 
-  .then((conn)=>{
-    conn.query(query, data, (err, results)=>{
-      conn.end()
-      if(err){
-        console.log("Error:",err)
-        return res.json({status:-1, message:"Error"})
-      }
-      console.log("results:", results)
-      res.json({status:1,results})
-    })
-  })
-  .catch((connectErr)=>{
-    console.log("Error", connectErr)
-  })
+app.get('/:id', ...rules.getRules, async(req,res)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("errors:", errors)
+    return res.status(400).json({ errors: errors.array() });
+  }
+  let value = [req.params.id];
+   await getUser(value)
+   .then((results)=>{
+     res.json(results)
+   })
+   .catch((err)=>{
+    res.json("Err");
+   })
+return true
 })
-
-// app.get('/:id', ...rules.getRules, (req,res)=>{
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     console.log("errors:", errors)
-//     return res.status(400).json({ errors: errors.array() });
-//   }
-//   let value = [req.params.id];
-//   (async()=>{
-//    let dbresult = await getUser(value)
-//   })
-// return true
-// })
 
 app.post("/createUser", [...rules.createRules], (req,res) => {
     const errors = validationResult(req);
